@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <div th:replace="~{fragments/accionFragments :: headerfiles}"></div>
+        <div th:replace="~{fragments/accionFragments :: level3Header}"></div>
+    </head>
+    <body class="hold-transition sidebar-mini layout-fixed">
+        <div id="accion_preloader_wrapper">
+            <div id="accion_preloader_box">
+                <div class="accion_loader">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div th:replace="~{fragments/accionFragments :: userManagerMenu}"></div>
+            <div class="content-wrapper">
+                <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-12"><h5 class="m-0 text-red">Pending Authorization</h5></div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card center-card">
+                                    <div class="card-body">
+                                        <table class="userManagerTable table table-striped table-hover table-sm table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Transaction Type</th>
+                                                    <th>Username</th>
+                                                    <th>Initial Value</th>
+                                                    <th>New Value</th>
+                                                    <th>Created By</th>
+                                                    <th>Date Created</th>
+                                                    <th>Application Type</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr th:each="rec : ${approvalList}">
+                                                    <td th:text="${rec.id}"></td>
+                                                    <td th:text="${rec.transType}"></td>
+                                                    <td th:text="${rec.userId}"></td>
+                                                    <td th:text="${rec.initialValue}"></td>
+                                                    <td th:text="${rec.newValue}"></td>
+                                                    <td th:text="${rec.createdBy}"></td>
+                                                    <td th:text="${rec.createdAt}"></td>
+                                                    <td th:text="${rec.appType}"></td>
+                                                    <td>
+                                                        <a th:onclick="|approveRecordDetails(${rec.id})|" class="btn btn-primary btn-sm text-capitalize text-white">Approve Record</a>
+                                                        <a th:onclick="|dropRecordDetails(${rec.id})|" class="btn btn-primary btn-sm text-capitalize text-white">Delete Record</a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:replace="~{fragments/accionFragments :: userManagerFooter}"></div>
+        </div>
+        <div th:replace="~{fragments/accionFragments :: userManagerScriptLevel3}"></div>v>
+        <div class="toast" style="position: absolute; top: 50px; right: 0; height: auto; width:auto;" data-autohide="false" data-delay="10000">
+            <div class="toast-header">
+                <strong class="mr-auto text-primary">A.I.S</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+            </div>
+            <div class="toast-body bg-white text-primary">
+                <p th:text="${alertMessage}"></p>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $(".chzn-select").chosen();
+            });
+        </script>
+        <script th:inline="javascript">
+            function approveRecordDetails(id) {
+                var recordId = id;
+                $('#approveRecordConfirmation').attr("href", "/accion/user-manager/approve-profile-record/" + recordId);
+                $('#approveRecordModal').modal('show');
+            }
+            ;
+            function dropRecordDetails(id) {
+                var recordId = id;
+                $('#dropRecordConfirmation').attr("href", "/accion/user-manager/drop-profile-approval/" + recordId);
+                $('#dropRecordModal').modal('show');
+            }
+            ;
+        </script>
+        <div class="modal" id="approveRecordModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-primary">A.I.S</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Approve record?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a id="approveRecordConfirmation" class="btn btn-primary btn-sm text-capitalize">Approve Record</a>
+                        <button type="button" class="btn btn-secondary btn-sm text-capitalize" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="dropRecordModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-primary">A.I.S</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Record will be deleted. Proceed?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a id="dropRecordConfirmation" class="btn btn-primary btn-sm text-capitalize">Drop Record</a>
+                        <button type="button" class="btn btn-secondary btn-sm text-capitalize" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

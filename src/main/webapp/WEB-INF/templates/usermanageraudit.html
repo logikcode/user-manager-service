@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <div th:replace="~{fragments/accionFragments :: headerfiles}"></div>
+        <div th:replace="~{fragments/accionFragments :: level3Header}"></div>
+    </head>
+    <body class="hold-transition sidebar-mini layout-fixed">
+        <div id="accion_preloader_wrapper">
+            <div id="accion_preloader_box">
+                <div class="accion_loader">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div th:replace="~{fragments/accionFragments :: userManagerMenu}"></div>
+            <div class="content-wrapper">
+                <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-12"><h5 class="m-0 text-red">User Manager Audit Log</h5></div>
+                        </div>
+                        <hr/>
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <form id="a24AuditLogFilter" class="form-inline" th:action="@{/audit/user-manager/get-audit-log}" th:object="${auditLogPayload}" method="POST">
+                                    <div class="form-group">
+                                        <label for="auditClass" class="sr-only">Audit Class<span class="text-primary">*</span></label>
+                                        <select th:field="*{auditClass}"  class="form-control form-control-sm">
+                                            <option value="">--Select Audit Class--</option>
+                                            <option value="Profile">User Profile</option>
+                                            <option value="Role">Roles & Permission</option>
+                                            <option value="Password">Password Change</option>
+                                            <option value="Parameter">System Parameter</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="auditType" class="sr-only">Audit Type<span class="text-primary">*</span></label>
+                                        <select th:field="*{auditType}"  class="form-control form-control-sm">
+                                            <option value="">--Select Audit Type--</option>
+                                            <option value="All">All</option>
+                                            <option value="Create">Create Operation</option>
+                                            <option value="Update">Update Operation</option>
+                                            <option value="Delete">Delete Operation</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="username" class="sr-only">Inputer</label>
+                                        <input type="text" class="form-control form-control-sm" th:field="*{username}" placeholder="Inputer"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="startDate">Start Date<span class="text-primary">*</span></label>
+                                        <input type="date" class="form-control form-control-sm" th:field="*{startDate}" required="required"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="endDate">End Date<span class="text-primary">*</span></label>
+                                        <input type="date" class="form-control form-control-sm" th:field="*{endDate}" required="required"/>
+                                    </div>
+                                    <button class="btn btn-secondary btn-rounded btn-sm text-white mb-2" type="submit">Process request</button>
+                                </form>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card" style="overflow: auto;">
+                                    <div class="card-body">
+                                        <table class="userManagerTable table table-striped table-hover table-sm table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Application Type</th>
+                                                    <th>Date Created</th>
+                                                    <th>Created By</th>
+                                                    <th>Date Authorized</th>
+                                                    <th>Authorized By</th>
+                                                    <th>Audit Class</th>
+                                                    <th>Audit Type</th>
+                                                    <th>Action</th>
+                                                    <th>System</th>
+                                                    <th>System Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr th:each="rec : ${auditLog}">
+                                                    <td th:text="${rec.id}"></td>
+                                                    <td th:text="${rec.appType}"></td>
+                                                    <td th:text="${rec.dateCreated}"></td>
+                                                    <td th:text="${rec.createdBy}"></td>
+                                                    <td th:text="${rec.dateApproved}"></td>
+                                                    <td th:text="${rec.approvedBy}"></td>
+                                                    <td th:text="${rec.auditClass}"></td>
+                                                    <td th:text="${rec.auditType}"></td>
+                                                    <td th:text="${rec.actionDescription}"></td>
+                                                    <td th:text="${rec.computerName}"></td>
+                                                    <td th:text="${rec.systemDate}"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:replace="~{fragments/accionFragments :: userManagerFooter}"></div>
+        </div>
+        <div th:replace="~{fragments/accionFragments :: userManagerScriptLevel3}"></div>v>
+        <div class="toast" style="position: absolute; top: 50px; right: 0; height: auto; width:auto;" data-autohide="false" data-delay="10000">
+            <div class="toast-header">
+                <strong class="mr-auto text-primary">A.I.S</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+            </div>
+            <div class="toast-body bg-white text-primary">
+                <p th:text="${alertMessage}"></p>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $(".chzn-select").chosen();
+            });
+        </script>
+    </body>
+</html>

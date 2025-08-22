@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <div th:replace="~{fragments/accionFragments :: headerfiles}"></div>
+        <div th:replace="~{fragments/accionFragments :: level3Header}"></div>
+    </head>
+    <body class="hold-transition sidebar-mini layout-fixed">
+        <div id="accion_preloader_wrapper">
+            <div id="accion_preloader_box">
+                <div class="accion_loader">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div th:replace="~{fragments/accionFragments :: userManagerMenu}"></div>
+            <div class="content-wrapper">
+                <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-12"><h5 class="m-0 text-red">User Profile Update</h5></div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="offset-2 col-sm-8">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="text-primary">User Profile Maintenance</h5>
+                                        <hr/>
+                                        <form id="addUserMenu" class="login-form" th:action="@{/user-manager/maintain-user-profile}" th:object="${profilePayload}" method="POST">
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Password Try</div>
+                                                <div class="col-sm-2">
+                                                    <div id="passwordTry"></div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div id="passwordTryName" class="text-primary"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Users<span class="text-primary">*</span></div>
+                                                <div class="col-sm-7">
+                                                    <select th:field="*{username}"  class="form-control form-control-sm chzn-select" required="required" th:onchange="|getPasswordTry()|">
+                                                        <option value="">--Select User--</option>
+                                                        <option th:each="user : ${users}" th:value="${user}" th:text="${user}"></option>
+                                                    </select> 
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Maintenance Type<span class="text-primary">*</span></div>
+                                                <div class="col-sm-7">
+                                                    <select th:field="*{maintenanceType}" class="form-control form-control-sm chzn-select" required="required" th:onchange="|getPasswordTry()|">
+                                                        <option value="">--Select Maintenance Type--</option>
+                                                        <option value="Email">Change Email</option>
+                                                        <option value="Enable">Enable User</option>
+                                                        <option value="Disable">Disable User</option>
+                                                        <option value="ApprovalLevel">Change Approval Level</option>
+                                                        <option value="LastName">Change Last Name</option>
+                                                        <option value="OtherName">Change Other Name</option>
+                                                        <option value="LoginReset">Reset Login Wait Time</option>
+                                                        <option value="UserType">Change User Type</option>
+                                                        <option value="Branch">Change Branch</option>
+                                                        <option value="Password">Reset User Password</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">User Type</div>
+                                                <div class="col-sm-7">
+                                                    <select th:field="*{userType}" class="form-control form-control-sm">
+                                                        <option value="">--Select User Type--</option>
+                                                        <option value="Authorizer">Authorizer</option>
+                                                        <option value="Control">Control</option>
+                                                        <option value="Inputer">Inputer</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">New Value</div>
+                                                <div class="col-sm-7">
+                                                    <input type="text" class="form-control form-control-sm" th:field="*{newValue}" placeholder="New value" />
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Branch</div>
+                                                <div class="col-sm-7">
+                                                    <select th:field="*{branch}" class="form-control form-control-sm chzn-select" multiple="multiple">
+                                                        <option value="">--Select Branch--</option>
+                                                        <option th:each="branch : ${branches}" th:value="${branch}" th:text="${branch}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Approval Level</div>
+                                                <div class="col-sm-7">
+                                                    <select th:field="*{approvalLevel}" class="form-control form-control-sm">
+                                                        <option value="">--Select Approval Level--</option>
+                                                        <option th:each="approval : ${approvalLevels}" th:value="${approval.levelCode}" th:text="'(' + ${#numbers.formatDecimal(approval.lowerLimit,0,'COMMA',2,'POINT')} + ' - ' + ${#numbers.formatDecimal(approval.upperLimit,0,'COMMA',2,'POINT')} + ')'"></option>
+                                                    </select>
+                                                    <br/>
+                                                    <button type="button" class="btn btn-secondary btn-rounded btn-sm text-white" data-target="#updateRecordConfirmRecordModal" data-toggle="modal">Process Request</button>
+                                                </div>
+                                            </div>
+                                            <div class="modal" id="updateRecordConfirmRecordModal" tabindex="-1" role="dialog">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title text-primary">Accion IS</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>User profile will be updated. Proceed?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary btn-sm text-capitalize">Update Profile</button>
+                                                            <button type="button" class="btn btn-secondary btn-sm text-capitalize" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:replace="~{fragments/accionFragments :: userManagerFooter}"></div>
+        </div>
+        <div th:replace="~{fragments/accionFragments :: userManagerScriptLevel3}"></div>v>
+        <div class="toast" style="position: absolute; top: 50px; right: 0; height: auto; width:auto;" data-autohide="false" data-delay="10000">
+            <div class="toast-header">
+                <strong class="mr-auto text-primary">A.I.S</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+            </div>
+            <div class="toast-body bg-white text-primary">
+                <p th:text="${alertMessage}"></p>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $(".chzn-select").chosen();
+            });
+
+            function getPasswordTry() {
+                var selectedUser = document.getElementById("username").value;
+                var maintenanceType = document.getElementById("maintenanceType").value;
+                if (maintenanceType === 'Password') {
+                    $.ajax
+                            ({
+                                url: "/accion/password-try/" + selectedUser,
+                                type: "GET",
+                                dataType: "text",
+                                success: function (data) {
+                                    $('#passwordTry').text(data);
+                                    $('#passwordTryName').text(selectedUser);
+                                },
+                                error: function (xhr, status) {
+                                    alert(xhr);
+                                }
+                            });
+                }
+                ;
+            }
+        </script>
+    </body>
+</html>

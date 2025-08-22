@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <div th:replace="~{fragments/accionFragments :: headerfiles}"></div>
+        <div th:replace="~{fragments/accionFragments :: level3Header}"></div>
+    </head>
+    <body class="hold-transition sidebar-mini layout-fixed">
+        <div id="accion_preloader_wrapper">
+            <div id="accion_preloader_box">
+                <div class="accion_loader">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div th:replace="~{fragments/accionFragments :: userManagerMenu}"></div>
+            <div class="content-wrapper">
+                <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-12"><h5 class="m-0 text-red">ALEN Role Grouping</h5></div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="offset-2 col-sm-8">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="text-primary">Create New Group</h5>
+                                        <hr/>
+                                        <form id="addA24RolesToGroup" class="login-form" th:action="@{/user-manager/alen/add-role-group}" th:object="${rolePayload}" method="POST">
+                                            <div class="modal fade" id="confirmA24GroupModal" tabindex="-1" role="dialog" aria-labelledby="role group modal" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title text-primary">A.I.S</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p class="modal-title">New group will be created. Proceed?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary btn-sm text-capitalize">Process Request</button>
+                                                            <button type="button" class="btn btn-secondary btn-sm text-capitalize" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Name:</div>
+                                                <div class="col-sm-7">
+                                                    <input type="text" class="form-control form-control-sm" th:field="*{roleGroupName}" placeholder="Group name" required="required" />
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Groups:</div>
+                                                <div class="col-sm-7">
+                                                    <select th:field="*{roleGroup}" class="form-control form-control-sm chzn-select">
+                                                        <option value="">--Select--</option>
+                                                        <option th:each="grp : ${alenRoleGroups}" th:value="${grp}" th:text="${grp}"></option>
+                                                    </select>
+                                                    <br/>
+                                                    <button data-toggle="modal" data-target="#confirmA24GroupModal" type="button"  class="btn btn-secondary btn-rounded btn-block btn-sm my-4 waves-effect z-depth-0">Process Request</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="text-primary">Add Roles to Group</h5>
+                                        <hr/>
+                                        <form id="addA24RolesToGroup" class="login-form" th:action="@{/user-manager/alen/add-role-to-group}" th:object="${rolePayload}" method="POST">
+                                            <div class="modal fade" id="confirmA24RoleToGroupModal" tabindex="-1" role="dialog" aria-labelledby="role group modal" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title text-primary">A.I.S</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p class="modal-title">Selected group will be updated with the selected roles. Proceed?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary btn-sm text-capitalize">Process Request</button>
+                                                            <button type="button" class="btn btn-secondary btn-sm text-capitalize" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Group:</div>
+                                                <div class="col-sm-7">
+                                                    <select th:field="*{roleGroupName}" class="form-control form-control-sm chzn-select" required="required">
+                                                        <option th:each="roleName : ${alenRoleGroups}" th:value="${roleName}" th:text="${roleName}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Roles:</div>
+                                                <div class="col-sm-7">
+                                                    <select th:field="*{roles}" class="form-control form-control-sm chzn-select" required="required" multiple="multiple">
+                                                        <option th:each="rol : ${alenAppRoles}" th:value="${rol}" th:text="${rol}"></option>
+                                                    </select>
+                                                    <br/>
+                                                    <button data-toggle="modal" data-target="#confirmA24RoleToGroupModal" type="button"  class="btn btn-secondary btn-rounded btn-block btn-sm my-4 waves-effect z-depth-0">Process Request</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="text-primary">Remove Roles From Group</h5>
+                                        <hr/>
+                                        <form id="userManagerTable" class="login-form" th:action="@{/user-manager/alen/drop-group-role}" th:object="${roleDropPayload}" method="POST">
+                                            <div class="modal fade" id="confirmA24RoleRemovalModal" tabindex="-1" role="dialog" aria-labelledby="role group modal" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title text-primary">A.I.S</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p class="modal-title">Selected roles will be deleted. Proceed?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary btn-sm text-capitalize">Process Request</button>
+                                                            <button type="button" class="btn btn-secondary btn-sm text-capitalize" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <table class="userManagerTable table table-striped table-hover table-sm table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Select</th>
+                                                        <th>ID</th>
+                                                        <th>Group</th>
+                                                        <th>Role</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr th:each="rec : ${alenRoleList}">
+                                                        <td><input th:field="*{fieldName}" name="fieldName" type="checkbox" th:value="${rec.id}" class="custom-checkbox"  /></td>
+                                                        <td th:text="${rec.id}"></td>
+                                                        <td th:text="${rec.roleGroup}"></td>
+                                                        <td th:text="${rec.roleName}"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <button data-toggle="modal" data-target="#confirmA24RoleRemovalModal" type="button" class="btn btn-primary btn-sm text-capitalize">Remove Selected Roles</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:replace="~{fragments/accionFragments :: userManagerFooter}"></div>
+        </div>
+        <div th:replace="~{fragments/accionFragments :: userManagerScriptLevel3}"></div>v>
+        <div class="toast" style="position: absolute; top: 50px; right: 0; height: auto; width:auto;" data-autohide="false" data-delay="10000">
+            <div class="toast-header">
+                <strong class="mr-auto text-primary">A.I.S</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+            </div>
+            <div class="toast-body bg-white text-primary">
+                <p th:text="${alertMessage}"></p>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $(".chzn-select").chosen();
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <div th:replace="~{fragments/accionFragments :: headerfiles}"></div>
+        <div th:replace="~{fragments/accionFragments :: level3Header}"></div>
+        <script th:inline="javascript">
+            function auditDetails(id) {
+                var recordId = id;
+                $.ajax
+                        ({
+                            url: "/accion/user-manager/user-audit-details/" + recordId,
+                            type: "GET",
+                            dataType: "json",
+                            success: function (data) {
+                                $('#resetTime').text(data.resetTime);
+                                $('#lastLogin').text(data.lastLogin);
+                                $('#createdBy').text(data.createdBy);
+                                $('#dateCreated').text(data.createdAt);
+                                $('#updatedBy').text(data.updatedBy);
+                                $('#dateUpdated').text(data.updatedAt);
+                                $('#defaultPwd').text(data.defaultPassword);
+                                $('#approvalLevel').text(data.approvalLevel);
+                                $('#auditModal').modal('show');
+                            },
+                            error: function (xhr, status) {
+                                alert(xhr);
+                            }
+                        });
+            }
+            ;
+        </script>
+    </head>
+    <body class="hold-transition sidebar-mini layout-fixed">
+        <div id="accion_preloader_wrapper">
+            <div id="accion_preloader_box">
+                <div class="accion_loader">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div th:replace="~{fragments/accionFragments :: userManagerMenu}"></div>
+            <div class="content-wrapper">
+                <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-12"><h5 class="m-0 text-red">User Profile Management</h5></div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="offset-2 col-sm-8">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="text-primary">New Profile</h5>
+                                        <hr/>
+                                        <form id="addUserMenu" class="login-form" th:action="@{/user-manager/add-user-profile}" th:object="${profilePayload}" method="POST">
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Last Name<span class="text-primary">*</span></div>
+                                                <div class="col-sm-7">
+                                                    <input type="text" class="form-control form-control-sm" th:field="*{lastName}" placeholder="Last name" required="required"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Other Name<span class="text-primary">*</span></div>
+                                                <div class="col-sm-7">
+                                                    <input type="text" class="form-control form-control-sm" th:field="*{otherName}" placeholder="Other names" required="required" />
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Username<span class="text-primary">*</span></div>
+                                                <div class="col-sm-7">
+                                                    <input type="text" class="form-control form-control-sm" th:field="*{username}" placeholder="Username" required="required" />
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Email<span class="text-primary">*</span></div>
+                                                <div class="col-sm-7">
+                                                    <input type="email" class="form-control form-control-sm" th:field="*{email}" placeholder="Email" required="required" />
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">User Type<span class="text-primary">*</span></div>
+                                                <div class="col-sm-7">
+                                                    <select th:field="*{userType}" class="form-control form-control-sm chzn-select" required="required" th:onchange="|getOtherBranches()|">
+                                                        <option value="">--Select--</option>
+                                                        <option value="Authorizer">Authorizer</option>
+                                                        <option value="Control">Control</option>
+                                                        <option value="Inputer">Inputer</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Approval Level<span class="text-primary">*</span></div>
+                                                <div class="col-sm-7">
+                                                    <select th:field="*{approvalLevel}" class="form-control form-control-sm" required="required">
+                                                        <option th:each="approval : ${approvalLevels}" th:value="${approval.levelCode}" th:text="'(' + ${#numbers.formatDecimal(approval.lowerLimit,0,'COMMA',2,'POINT')} + ' - ' + ${#numbers.formatDecimal(approval.upperLimit,0,'COMMA',2,'POINT')} + ')'"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Account Number<span class="text-primary">*</span></div>
+                                                <div class="col-sm-7">
+                                                    <input type="text" class="form-control form-control-sm" th:field="*{accountNumber}" placeholder="Account Number" required="required" />
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Branch<span class="text-primary">*</span></div>
+                                                <div class="col-sm-7">
+                                                    <select th:field="*{branch}" class="form-control form-control-sm chzn-select" required="required" multiple="multiple">
+                                                        <option value="">--Select Branch ---</option>
+                                                        <option th:each="branch : ${branches}" th:value="${branch}" th:text="${branch}"></option>
+                                                    </select>
+                                                    <br/>
+                                                    <button type="submit" class="btn btn-secondary btn-rounded btn-sm text-white">Process Request</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card" style="overflow-x: auto;">
+                                    <div class="card-body">
+                                        <h5 class="text-primary">User Profile Listing</h5>
+                                        <hr/>
+                                        <table class="userManagerTable table table-striped table-hover table-sm table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Last Name</th>
+                                                    <th>Other Name</th>
+                                                    <th>Username</th>
+                                                    <th>Email</th>
+                                                    <th>User Type</th>
+                                                    <th>Status</th>
+                                                    <th>Branch</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr th:each="rec : ${userList}">
+                                                    <td th:text="${rec.id}"></td>
+                                                    <td th:text="${rec.lastName}"></td>
+                                                    <td th:text="${rec.otherName}"></td>
+                                                    <td th:text="${rec.username}"></td>
+                                                    <td th:text="${rec.email}"></td>
+                                                    <td th:text="${rec.userType}"></td>
+                                                    <td th:text="${rec.status}"></td>
+                                                    <td th:text="${rec.branch}"></td>
+                                                    <td>
+                                                        <a th:onclick="|auditDetails(${rec.id})|" class="btn btn-primary btn-sm text-capitalize text-white">Audit Details</a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:replace="~{fragments/accionFragments :: userManagerFooter}"></div>
+        </div>
+        <div th:replace="~{fragments/accionFragments :: userManagerScriptLevel3}"></div>v>
+        <div class="toast" style="position: absolute; top: 50px; right: 0; height: auto; width:auto;" data-autohide="false" data-delay="10000">
+            <div class="toast-header">
+                <strong class="mr-auto text-primary">A.I.S</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+            </div>
+            <div class="toast-body bg-white text-primary">
+                <p th:text="${alertMessage}"></p>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $(".chzn-select").chosen();
+            });
+        </script>
+        <div class="modal" id="auditModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-primary">Accion IS</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card">
+                            <div class="card-header text-center"><h5 class="text-primary">Audit Details</h5></div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-5 text-primary">Created By : </div>
+                                    <div id="createdBy" name="createdBy" class="col-sm-7 text-secondary"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-5 text-primary">Date Created : </div>
+                                    <div id="dateCreated" name="dateCreated" class="col-sm-7 text-secondary"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-5 text-primary">Update By : </div>
+                                    <div id="updatedBy" class="col-sm-7 text-secondary" style="color:red;"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-5 text-primary">Date Updated : </div>
+                                    <div id="dateUpdated" class="col-sm-7 text-secondary"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-5 text-primary">Last Login : </div>
+                                    <div id="lastLogin" class="col-sm-7 text-secondary"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-5 text-primary">Reset Time : </div>
+                                    <div id="resetTime" class="col-sm-7 text-secondary"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-5 text-primary">Default Password : </div>
+                                    <div id="defaultPwd" class="col-sm-7 text-secondary"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-5 text-primary">Approval Level : </div>
+                                    <span id="approvalLevel" class="col-sm-7 text-secondary"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm text-capitalize" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="dropRecordModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-primary">A.I.S</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Record will be deleted. Proceed?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm text-capitalize" data-dismiss="modal">Close</button>
+                        <a id="dropRecordConfirmation" class="btn btn-primary btn-sm text-capitalize">Drop Record</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

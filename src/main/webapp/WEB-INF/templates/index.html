@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <div th:replace="~{fragments/accionFragments :: headerfiles}"></div>
+    <div th:replace="~{fragments/accionFragments :: level1Header}"></div>
+</head>
+<body style="background-image:url('/accion/images/bg.png'); background-size: cover;background-repeat: no-repeat;">
+<div id="accion_preloader_wrapper">
+    <div id="accion_preloader_box">
+        <div class="accion_loader">
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+<div id="aboutAIS" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">A.I.S</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>About A.I.S</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid text-center">
+    <br/>
+    <br/>
+    <div class="row">
+        <div class="offset-2 col-sm-8">
+            <div class="jumbotron">
+                <div class="text-center">
+                    <h1 class="text-primary">Accion Microfinance Bank</h1>
+                    <h3 class="display-4">Integrated Services</h3>
+                </div>
+                <p class="lead">This is a unified management interface for Accion MfB portals</p>
+                <br/>
+                <span style="color:red;">(The User Manager is for Control and Audit alone)</span>
+                <a th:href="@{/login}"
+                   class="btn btn-secondary btn-rounded text-white btn-block btn-sm my-4 waves-effect z-depth-0">User
+                    Manager</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid text-center">
+    <div class="card-group">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-credit-card fa-3x text-primary"></i>
+                <div class="card-body text-center">
+                    <h6 class="card-title">Accion Intranet</h6>
+                    <a th:href="@{http://localhost:8080/accionintranet}"
+                       class="btn btn-secondary btn-rounded text-white btn-block btn-sm my-4 waves-effect z-depth-0">Connect</a>
+                </div>
+            </div>
+        </div>
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-text-width fa-3x text-primary"></i>
+                <div class="card-body text-center">
+                    <h6 class="card-title">A-24 Core</h6>
+                    <a th:href="@{http://localhost:8080/a24core}"
+                       class="btn btn-secondary btn-rounded text-white btn-block btn-sm my-4 waves-effect z-depth-0">Connect</a>
+                </div>
+            </div>
+        </div>
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-mobile fa-3x text-primary"></i>
+                <div class="card-body text-center">
+                    <h6 class="card-title">572 USSD</h6>
+                    <a th:href="@{http://localhost:8080/ussd}"
+                       class="btn btn-secondary btn-rounded text-white btn-block btn-sm my-4 waves-effect z-depth-0">Connect</a>
+                </div>
+            </div>
+        </div>
+        <div class="card text-center" style="padding-top:5px;">
+            <div class="card-body">
+                <i class="fas fa-money fa-3x text-primary"></i>
+                <div class="card-body text-center">
+                    <h6 class="card-title">Money Laundering</h6>
+                    <a th:href="@{http://localhost:8080/aml}"
+                       class="btn btn-secondary btn-rounded text-white btn-block btn-sm my-4 waves-effect z-depth-0">Connect</a>
+                </div>
+            </div>
+        </div>
+        <div class="card text-center" style="padding-top:5px;">
+            <div class="card-body">
+                <i class="fas fa-credit-card-alt fa-3x text-primary"></i>
+                <div class="card-body text-center">
+                    <h6 class="card-title">Credit Bureau</h6>
+                    <a th:href="@{http//localhost:8080/creditbureau}"
+                       class="btn btn-secondary btn-rounded text-white btn-block btn-sm my-4 waves-effect z-depth-0"
+                       style="display: none;">Connect</a>
+                </div>
+            </div>
+        </div>
+        <div class="card text-center" style="padding-top:5px;">
+            <div class="card-body">
+                <i class="fas fa-bank fa-3x text-primary"></i>
+                <div class="card-body text-center">
+                    <h6 class="card-title">Save Brighta</h6>
+                    <a th:href="@{http//localhost:8080/brighta}"
+                       class="btn btn-secondary btn-rounded text-white btn-block btn-sm my-4 waves-effect z-depth-0">Connect</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/accionFragments :: userManagerScriptLevel1}"></div>
+<div class="toast" style="position: absolute; top: 0; right: 0; height: auto; width:auto;" data-autohide="false"
+     data-delay="10000">
+    <div class="toast-header">
+        <strong class="mr-auto text-primary">A.I.S</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+    </div>
+    <div class="toast-body bg-secondary text-white">
+        <p th:text="${alertMessage}"></p>
+    </div>
+</div>
+</body>
+</html>

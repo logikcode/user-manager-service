@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <div th:replace="~{fragments/accionFragments :: headerfiles}"></div>
+        <div th:replace="~{fragments/accionFragments :: level3Header}"></div>
+    </head>
+    <body class="hold-transition sidebar-mini layout-fixed">
+        <div id="accion_preloader_wrapper">
+            <div id="accion_preloader_box">
+                <div class="accion_loader">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div th:replace="~{fragments/accionFragments :: userManagerMenu}"></div>
+            <div class="content-wrapper">
+                <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-12"><h5 class="m-0 text-red">User Role</h5></div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="offset-2 col-sm-8">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="text-primary">Credit Bureau Landing Page</h5>
+                                        <hr/>
+                                        <form id="addUserToGroup" class="login-form"  th:action="@{/user-manager/credit-bureau/update-role}" th:object="${userRolePayload}" method="POST">
+                                            <div class="modal fade" id="confirmUpdateRecordModal" tabindex="-1" role="dialog" aria-labelledby="confirmUpdateRecordModal" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title text-primary">A.I.S</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p class="modal-title">Proceed with updating record?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary btn-sm text-capitalize" name="action" value="update">Proceed</button>
+                                                            <button type="button" class="btn btn-secondary btn-sm text-capitalize" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Users:</div>
+                                                <div class="col-sm-7">
+                                                    <select th:field="*{username}"  class="form-control form-control-sm chzn-select" required="required">
+                                                        <option value="">--Select--</option>
+                                                        <option th:each="user : ${users}" th:value="${user}" th:text="${user}"></option>
+                                                    </select> 
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-sm-4 form-control-sm text-right">Role:</div>
+                                                <div class="col-sm-7">
+                                                    <select th:field="*{userRole}"  class="form-control form-control-sm chzn-select" required="required">
+                                                        <option value="">--Select--</option>
+                                                        <option th:each="role : ${creditBureauRoles}" th:value="${role}" th:text="${role}"></option>
+                                                    </select> 
+                                                    <br/>
+                                                    <button data-toggle="modal" data-target="#confirmUpdateRecordModal" type="button" class="btn btn-secondary btn-rounded btn-block btn-sm my-4 waves-effect z-depth-0">Update</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="text-primary">Landing Page Listing</h5>
+                                        <hr/>
+                                        <table class="userManagerTable table table-striped table-hover table-sm table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Application Type</th>
+                                                    <th>Username</th>
+                                                    <th>Role</th>
+                                                    <th>User Type</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr th:each="rec : ${creditBureauRoleList}">
+                                                    <td th:text="${rec.id}"></td>
+                                                    <td th:text="${rec.landingPageId.appType}"></td>
+                                                    <td th:text="${rec.usersId.username}"></td>
+                                                    <td th:text="${rec.landingPageId.roleName}"></td>
+                                                    <td th:text="${rec.usersId.userType}"></td>
+                                                    <td th:text="${rec.status}"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:replace="~{fragments/accionFragments :: userManagerFooter}"></div>
+        </div>
+        <div th:replace="~{fragments/accionFragments :: userManagerScriptLevel3}"></div>v>
+        <div class="toast" style="position: absolute; top: 50px; right: 0; height: auto; width:auto;" data-autohide="false" data-delay="10000">
+            <div class="toast-header">
+                <strong class="mr-auto text-primary">A.I.S</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+            </div>
+            <div class="toast-body bg-white text-primary">
+                <p th:text="${alertMessage}"></p>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $(".chzn-select").chosen();
+            });
+        </script>
+    </body>
+</html>
