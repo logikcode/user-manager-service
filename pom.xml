@@ -244,10 +244,28 @@
             <artifactId>passay</artifactId>
             <version>1.4.0</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.github.ulisesbocchio</groupId>-->
+<!--            <artifactId>jasypt-spring-boot-starter</artifactId>-->
+<!--            <version>3.0.4</version>-->
+<!--        </dependency>-->
+
+        <!-- REPLACE CURRENT VERSION WITH -->
+<!--        <dependency>-->
+<!--            <groupId>com.github.ulisesbocchio</groupId>-->
+<!--            <artifactId>jasypt-spring-boot-starter</artifactId>-->
+<!--            <version>2.1.2</version> &lt;!&ndash; Compatible with Spring 5.x &ndash;&gt;-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>com.github.ulisesbocchio</groupId>
-            <artifactId>jasypt-spring-boot-starter</artifactId>
-            <version>3.0.4</version>
+            <groupId>org.jasypt</groupId>
+            <artifactId>jasypt</artifactId>
+            <version>1.9.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jasypt</groupId>
+            <artifactId>jasypt-spring31</artifactId>
+            <version>1.9.3</version>
         </dependency>
 
 

@@ -1487,7 +1487,7 @@ public class UserServiceImpl implements UserService {
         //Check the current password
         UserDetails auth = userDetailService.loadUserByUsername(loginPayload.getUsername());
         Boolean currentPasswordValid = bCryptEncoder.matches(loginPayload.getPassword(), auth.getPassword());
-        if (currentPasswordValid == false) {
+        if (!currentPasswordValid) {
             return messageSource.getMessage("appMessages.invalidCurrentPassword", new Object[0], Locale.ENGLISH);
         }
 
