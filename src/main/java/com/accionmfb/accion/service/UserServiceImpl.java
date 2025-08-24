@@ -59,6 +59,8 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
+
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +75,7 @@ import org.thymeleaf.util.StringUtils;
  *
  * @author Brian A. Okon okon.brian@gmail.com
  */
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -633,7 +636,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String getAuthorizationHeader() {
-        String AUTHORIZATION = "Basic " + Base64.getEncoder().encodeToString((env.getProperty("accion.authorization.username").trim() + ":" + env.getProperty("accion.authorization.password").trim()).getBytes());
+        String AUTHORIZATION = "Basic " + Base64.getEncoder()
+                .encodeToString((env.getProperty("accion.authorization.username").trim()
+                + ":" + env.getProperty("accion.authorization.password").trim()).getBytes());
+        log.info("Authorization header server-side: " + AUTHORIZATION);
         return AUTHORIZATION;
     }
 
@@ -643,6 +649,7 @@ public class UserServiceImpl implements UserService {
         String SignaturePlain = String.format("%s:%s:%s", TIMESTAMP, env.getProperty("accion.authorization.username").trim(), env.getProperty("accion.authorization.secret.key").trim());
         String SIGNATURE = SignaturePlain; //this must be computation of SignaturePlain using SHA512
         SIGNATURE = hash(SignaturePlain, env.getProperty("accion.authorization.hash.key").trim());
+        log.info("Signature server-side: " + SIGNATURE);
         return SIGNATURE;
     }
 
